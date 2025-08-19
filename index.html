@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أسرتي - منصة الأسر المنتجة</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+</head>
+<body>
+    <!-- شاشة التحميل -->
+    <div id="loader" class="loader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <i class="fas fa-home"></i>
+                <span>أسرتي</span>
+            </div>
+            <div class="loader-spinner"></div>
+            <p>جاري تحضير أشهى الأطباق...</p>
+        </div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-home"></i>
+                <span>أسرتي</span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link active">الرئيسية</a></li>
+                <li><a href="#families" class="nav-link">الأسر المنتجة</a></li>
+                <li><a href="#categories" class="nav-link">التصنيفات</a></li>
+                <li><a href="#about" class="nav-link">من نحن</a></li>
+                <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="cart-icon" id="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+                <button class="login-btn">تسجيل الدخول</button>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- القسم الرئيسي -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="particles" id="particles"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="typing-text">أشهى الأطباق من</span>
+                    <span class="highlight">الأسر المنتجة</span>
+                </h1>
+                <p class="hero-subtitle">اكتشف نكهات أصيلة وأطباق منزلية شهية من أسر سعودية منتجة</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" data-target="150">0</span>
+                        <span class="stat-label">أسرة منتجة</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-target="500">0</span>
+                        <span class="stat-label">طبق متنوع</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-target="10000">0</span>
+                        <span class="stat-label">عميل سعيد</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-search">
+                <div class="search-container">
+                    <div class="search-tabs">
+                        <button class="search-tab active" data-tab="location">البحث بالموقع</button>
+                        <button class="search-tab" data-tab="category">البحث بالتصنيف</button>
+                    </div>
+                    <div class="search-content">
+                        <div class="search-panel active" id="location-panel">
+                            <div class="search-row">
+                                <div class="search-field">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <select id="city-select">
+                                        <option value="">اختر المدينة</option>
+                                        <option value="riyadh">الرياض</option>
+                                        <option value="jeddah">جدة</option>
+                                        <option value="dammam">الدمام</option>
+                                        <option value="mecca">مكة المكرمة</option>
+                                        <option value="medina">المدينة المنورة</option>
+                                    </select>
+                                </div>
+                                <div class="search-field">
+                                    <i class="fas fa-building"></i>
+                                    <select id="district-select">
+                                        <option value="">اختر الحي</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-panel" id="category-panel">
+                            <div class="search-row">
+                                <div class="search-field">
+                                    <i class="fas fa-utensils"></i>
+                                    <select id="category-select">
+                                        <option value="">اختر التصنيف</option>
+                                        <option value="main">أطباق رئيسية</option>
+                                        <option value="appetizers">مقبلات</option>
+                                        <option value="desserts">حلويات</option>
+                                        <option value="drinks">مشروبات</option>
+                                        <option value="pastries">معجنات</option>
+                                    </select>
+                                </div>
+                                <div class="search-field">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" placeholder="ابحث عن طبق معين..." id="dish-search">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="search-btn" id="search-btn">
+                            <i class="fas fa-search"></i>
+                            ابحث الآن
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التصنيفات -->
+    <section id="categories" class="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">تصنيفات الأطباق</h2>
+                <p class="section-subtitle">اختر من تشكيلة واسعة من الأطباق الشهية</p>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" data-category="main">
+                    <div class="category-icon">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                    <h3>أطباق رئيسية</h3>
+                    <p>كبسة، مندي، مظبي وأكثر</p>
+                    <span class="category-count">85 طبق</span>
+                </div>
+                <div class="category-card" data-category="appetizers">
+                    <div class="category-icon">
+                        <i class="fas fa-cheese"></i>
+                    </div>
+                    <h3>مقبلات</h3>
+                    <p>سلطات، شوربات، مخللات</p>
+                    <span class="category-count">42 طبق</span>
+                </div>
+                <div class="category-card" data-category="desserts">
+                    <div class="category-icon">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <h3>حلويات</h3>
+                    <p>كنافة، بقلاوة، معمول</p>
+                    <span class="category-count">67 طبق</span>
+                </div>
+                <div class="category-card" data-category="drinks">
+                    <div class="category-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h3>مشروبات</h3>
+                    <p>قهوة، شاي، عصائر طبيعية</p>
+                    <span class="category-count">28 طبق</span>
+                </div>
+                <div class="category-card" data-category="pastries">
+                    <div class="category-icon">
+                        <i class="fas fa-bread-slice"></i>
+                    </div>
+                    <h3>معجنات</h3>
+                    <p>فطائر، سمبوسة، خبز</p>
+                    <span class="category-count">35 طبق</span>
+                </div>
+                <div class="category-card" data-category="traditional">
+                    <div class="category-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3>أطباق تراثية</h3>
+                    <p>جريش، عصيدة، هريس</p>
+                    <span class="category-count">23 طبق</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الأسر المنتجة -->
+    <section id="families" class="families">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">الأسر المنتجة المميزة</h2>
+                <p class="section-subtitle">تعرف على أفضل الأسر المنتجة في المملكة</p>
+            </div>
+            <div class="families-grid" id="families-grid">
+                <!-- سيتم إضافة الأسر هنا بواسطة JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم من نحن -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">من نحن</h2>
+                    <p>منصة أسرتي هي أول منصة سعودية متخصصة في ربط الأسر المنتجة بالعملاء، نهدف إلى دعم الاقتصاد المحلي وتمكين الأسر السعودية من تسويق منتجاتها الغذائية المميزة.</p>
+                    <div class="about-features">
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>جودة مضمونة</h4>
+                                <p>جميع الأسر معتمدة ومرخصة</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-truck"></i>
+                            <div>
+                                <h4>توصيل سريع</h4>
+                                <p>توصيل في نفس اليوم</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-heart"></i>
+                            <div>
+                                <h4>طعم أصيل</h4>
+                                <p>نكهات منزلية أصيلة</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800" alt="عن أسرتي">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التواصل -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">تواصل معنا</h2>
+                <p class="section-subtitle">نحن هنا لخدمتك في أي وقت</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>الهاتف</h4>
+                            <p>+966 50 123 4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>البريد الإلكتروني</h4>
+                            <p>info@osrati.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>العنوان</h4>
+                            <p>الرياض، المملكة العربية السعودية</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form">
+                    <div class="form-row">
+                        <input type="text" placeholder="الاسم الكامل" required>
+                        <input type="email" placeholder="البريد الإلكتروني" required>
+                    </div>
+                    <input type="tel" placeholder="رقم الهاتف" required>
+                    <select required>
+                        <option value="">نوع الاستفسار</option>
+                        <option value="order">استفسار عن طلب</option>
+                        <option value="family">انضمام كأسرة منتجة</option>
+                        <option value="complaint">شكوى</option>
+                        <option value="suggestion">اقتراح</option>
+                    </select>
+                    <textarea placeholder="رسالتك" rows="5" required></textarea>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال الرسالة
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-home"></i>
+                        <span>أسرتي</span>
+                    </div>
+                    <p>منصة الأسر المنتجة الأولى في المملكة العربية السعودية</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-snapchat"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#home">الرئيسية</a></li>
+                        <li><a href="#families">الأسر المنتجة</a></li>
+                        <li><a href="#categories">التصنيفات</a></li>
+                        <li><a href="#about">من نحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>خدماتنا</h4>
+                    <ul>
+                        <li><a href="#">توصيل الطلبات</a></li>
+                        <li><a href="#">دعم الأسر المنتجة</a></li>
+                        <li><a href="#">ضمان الجودة</a></li>
+                        <li><a href="#">خدمة العملاء</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تطبيق الجوال</h4>
+                    <p>حمل التطبيق واستمتع بتجربة أفضل</p>
+                    <div class="app-links">
+                        <a href="#" class="app-link">
+                            <i class="fab fa-apple"></i>
+                            <span>App Store</span>
+                        </a>
+                        <a href="#" class="app-link">
+                            <i class="fab fa-google-play"></i>
+                            <span>Google Play</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 أسرتي. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- نافذة تفاصيل الأسرة -->
+    <div id="family-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body" id="modal-body">
+                <!-- سيتم إضافة المحتوى هنا بواسطة JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة السلة -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>سلة التسوق</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="cart-content" id="cart-content">
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>سلة التسوق فارغة</p>
+                </div>
+            </div>
+            <div class="cart-footer" id="cart-footer" style="display: none;">
+                <div class="cart-total">
+                    <span>المجموع: <span id="cart-total">0</span> ريال</span>
+                </div>
+                <button class="checkout-btn" id="checkout-btn">
+                    <i class="fas fa-credit-card"></i>
+                    إتمام الطلب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الدفع -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إتمام الطلب</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="checkout-content">
+                <form id="checkout-form">
+                    <div class="form-section">
+                        <h4>معلومات التوصيل</h4>
+                        <div class="form-row">
+                            <input type="text" placeholder="الاسم الكامل" required>
+                            <input type="tel" placeholder="رقم الهاتف" required>
+                        </div>
+                        <input type="email" placeholder="البريد الإلكتروني" required>
+                        <textarea placeholder="العنوان التفصيلي" rows="3" required></textarea>
+                        <textarea placeholder="ملاحظات إضافية (اختياري)" rows="2"></textarea>
+                    </div>
+                    <div class="form-section">
+                        <h4>طريقة الدفع</h4>
+                        <div class="payment-methods">
+                            <label class="payment-method">
+                                <input type="radio" name="payment" value="cash" checked>
+                                <span>الدفع عند الاستلام</span>
+                                <i class="fas fa-money-bill-wave"></i>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment" value="card">
+                                <span>بطاقة ائتمانية</span>
+                                <i class="fas fa-credit-card"></i>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment" value="bank">
+                                <span>تحويل بنكي</span>
+                                <i class="fas fa-university"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="order-summary">
+                        <h4>ملخص الطلب</h4>
+                        <div id="order-items"></div>
+                        <div class="total-row">
+                            <span>المجموع الفرعي: <span id="subtotal">0</span> ريال</span>
+                        </div>
+                        <div class="total-row">
+                            <span>رسوم التوصيل: <span id="delivery-fee">15</span> ريال</span>
+                        </div>
+                        <div class="total-row final-total">
+                            <span>المجموع النهائي: <span id="final-total">0</span> ريال</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="place-order-btn">
+                        <i class="fas fa-check"></i>
+                        تأكيد الطلب
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر العودة للأعلى -->
+    <button id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- نظام الإشعارات -->
+    <div id="notifications" class="notifications"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
