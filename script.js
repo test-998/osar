@@ -1,3 +1,171 @@
+// بيانات التقييمات (مؤقتة - يمكن ربطها بقاعدة بيانات)
+const reviewsData = {
+    1: [
+        {
+            id: 1,
+            name: "أحمد محمد",
+            rating: 5,
+            comment: "كبسة رائعة ونكهة أصيلة، الأسرة محترمة جداً والطعام طازج",
+            date: "2024-01-15",
+            verified: true
+        },
+        {
+            id: 2,
+            name: "فاطمة العلي",
+            rating: 4,
+            comment: "طعم جميل والتوصيل سريع، بس الكمية كانت قليلة شوي",
+            date: "2024-01-10",
+            verified: true
+        },
+        {
+            id: 3,
+            name: "سعد الغامدي",
+            rating: 5,
+            comment: "أفضل كبسة جربتها، تستاهل كل ريال دفعته",
+            date: "2024-01-08",
+            verified: false
+        }
+    ],
+    2: [
+        {
+            id: 4,
+            name: "نورا أحمد",
+            rating: 5,
+            comment: "كنافة لذيذة جداً وطازجة، تذكرني بطعم البيت",
+            date: "2024-01-12",
+            verified: true
+        },
+        {
+            id: 5,
+            name: "خالد السعيد",
+            rating: 4,
+            comment: "حلويات ممتازة والأسعار معقولة",
+            date: "2024-01-05",
+            verified: true
+        }
+    ],
+    3: [
+        {
+            id: 6,
+            name: "مريم الحربي",
+            rating: 5,
+            comment: "فطائر السبانخ رهيبة والعجينة طرية",
+            date: "2024-01-14",
+            verified: true
+        }
+    ]
+};
+
+// الحصول على تقييمات أسرة معينة
+function getReviewsForFamily(familyId) {
+    return reviewsData[familyId] || [];
+}
+
+// حساب متوسط التقييم
+function calculateAverageRating(reviews) {
+    if (reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (sum / reviews.length).toFixed(1);
+}
+
+// حساب توزيع التقييمات
+function calculateRatingDistribution(reviews) {
+    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    reviews.forEach(review => {
+        distribution[review.rating]++;
+    });
+    return distribution;
+}
+
+// إنشاء نجوم التقييم
+function createStarRating(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    let starsHTML = '';
+    
+    for (let i = 1; i <= 5; i++) {
+        if (i <= fullStars) {
+            starsHTML += '<i class="fas fa-star"></i>';
+        } else if (i === fullStars + 1 && hasHalfStar) {
+            starsHTML += '<i class="fas fa-star-half-alt"></i>';
+        } else {
+            starsHTML += '<i class="far fa-star"></i>';
+        }
+    }
+    
+    return starsHTML;
+}
+
+// إنشاء بطاقة تقييم
+function createReviewCard(review) {
+    const reviewDate = new Date(review.date).toLocaleDateString('ar-SA');
+    
+    return `
+        <div class="review-card">
+            <div class="review-header">
+                <div class="reviewer-info">
+                    <div class="reviewer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="reviewer-details">
+                        <h5 class="reviewer-name">
+                            ${review.name}
+                            ${review.verified ? '<i class="fas fa-check-circle verified-badge" title="عميل موثق"></i>' : ''}
+                        </h5>
+                        <div class="review-rating">
+                            ${createStarRating(review.rating)}
+                        </div>
+                    </div>
+                </div>
+                <span class="review-date">${reviewDate}</span>
+            </div>
+            <div class="review-content">
+                <p>${review.comment}</p>
+            </div>
+        </div>
+    `;
+}
+
+// إظهار نموذج إضافة تقييم
+function showAddReviewForm() {
+    document.getElementById('add-review-form').style.display = 'block';
+}
+
+// إخفاء نموذج إضافة تقييم
+function hideAddReviewForm() {
+    document.getElementById('add-review-form').style.display = 'none';
+}
+
+// إرسال تقييم جديد
+function submitReview(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const newReview = {
+        id: Date.now(),
+        name: formData.get('name'),
+        rating: parseInt(formData.get('rating')),
+        comment: formData.get('comment'),
+        date: new Date().toISOString().split('T')[0],
+        verified: false
+    };
+    
+    // إضافة التقييم للبيانات
+    if (!reviewsData[currentFamily.id]) {
+        reviewsData[currentFamily.id] = [];
+    }
+    reviewsData[currentFamily.id].unshift(newReview);
+    
+    // إعادة تحميل قسم التقييمات
+    document.getElementById('reviews-panel').innerHTML = createReviewsSection(currentFamily);
+    
+    // إخفاء النموذج
+    hideAddReviewForm();
+    
+    // إظهار رسالة نجاح
+    showNotification('تم إضافة تقييمك بنجاح!', 'success');
+}
+
 // بيانات الأسر المنتجة
 const familiesData = [
     {
@@ -467,53 +635,139 @@ function showFamilyDetails(familyId) {
     const family = familiesData.find(f => f.id === familyId);
     if (!family) return;
 
-    currentFamily = family;
-    const modal = document.getElementById('family-modal');
-    const modalBody = document.getElementById('modal-body');
-
-    modalBody.innerHTML = createFamilyPage(family);
-    modal.classList.add('active');
+    // إخفاء الصفحة الرئيسية وإظهار صفحة الأسرة
+    document.getElementById('main-content').style.display = 'none';
     
-    // إضافة مستمعي الأحداث للأزرار
-    addFamilyPageListeners();
+    // إنشاء صفحة الأسرة
+    createFamilyPageContent(family);
+    
+    // إظهار صفحة الأسرة
+    document.getElementById('family-page').style.display = 'block';
+    
+    // تحديث عنوان الصفحة
+    document.title = `${family.name} - أسرتي`;
+    
+    // التمرير للأعلى
+    window.scrollTo(0, 0);
 }
 
-// إنشاء صفحة الأسرة
-function createFamilyPage(family) {
+// إنشاء محتوى صفحة الأسرة
+function createFamilyPageContent(family) {
+    currentFamily = family;
+    const familyPageContainer = document.getElementById('family-page');
+    
+    familyPageContainer.innerHTML = `
+        <div class="family-page-header">
+            <button class="back-btn" onclick="goBackToHome()">
+                <i class="fas fa-arrow-right"></i>
+                العودة للرئيسية
+            </button>
+        </div>
+        
+        <div class="family-hero">
+            <div class="family-hero-bg" style="background-image: url('${family.image}')"></div>
+            <div class="family-hero-overlay">
+                <div class="container">
+                    <div class="family-hero-content">
+                        <div class="family-info-main">
+                            <h1 class="family-title">${family.name}</h1>
+                            <div class="family-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${family.location}</span>
+                            </div>
+                            <p class="family-description">${family.description}</p>
+                            <div class="family-stats-main">
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">${family.rating}</span>
+                                        <span class="stat-label">التقييم</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">${family.orders}+</span>
+                                        <span class="stat-label">طلب</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <span class="stat-number">30-45</span>
+                                        <span class="stat-label">دقيقة</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="family-contact-main">
+                                <a href="tel:${family.phone}" class="contact-btn-main phone">
+                                    <i class="fas fa-phone"></i>
+                                    اتصال
+                                </a>
+                                <a href="https://wa.me/${family.whatsapp}" target="_blank" class="contact-btn-main whatsapp">
+                                    <i class="fab fa-whatsapp"></i>
+                                    واتساب
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="family-content">
+            <div class="container">
+                <div class="family-tabs">
+                    <button class="family-tab active" data-tab="menu">القائمة</button>
+                    <button class="family-tab" data-tab="reviews">التقييمات والتعليقات</button>
+                    <button class="family-tab" data-tab="info">معلومات الأسرة</button>
+                </div>
+                
+                <div class="family-tab-content">
+                    <div class="tab-panel active" id="menu-panel">
+                        ${createMenuSection(family)}
+                    </div>
+                    
+                    <div class="tab-panel" id="reviews-panel">
+                        ${createReviewsSection(family)}
+                    </div>
+                    
+                    <div class="tab-panel" id="info-panel">
+                        ${createInfoSection(family)}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // إضافة مستمعي الأحداث
+    addFamilyPageListeners();
+    initializeFamilyTabs();
+}
+
+// إنشاء قسم القائمة
+function createMenuSection(family) {
     let menuHTML = '';
     
     Object.keys(family.menu).forEach(category => {
         const categoryName = getCategoryDisplayName(category);
         menuHTML += `
-            <div class="menu-section">
-                <h3>${categoryName}</h3>
+            <div class="menu-category">
+                <h3 class="category-title">${categoryName}</h3>
                 <div class="menu-items">
-                    ${family.menu[category].map(item => createMenuItem(item, family)).join('')}
+                    ${family.menu[category].map(item => createMenuItemCard(item, family)).join('')}
                 </div>
             </div>
         `;
     });
 
-    return `
-        <div class="family-page">
-            <div class="family-header">
-                <div class="family-cover" style="background-image: url('${family.image}')"></div>
-                <h2 class="family-title">${family.name}</h2>
-                <p class="family-description">${family.description}</p>
-                <div class="family-contact">
-                    <a href="tel:${family.phone}" class="contact-btn phone">
-                        <i class="fas fa-phone"></i>
-                        اتصال
-                    </a>
-                    <a href="https://wa.me/${family.whatsapp}" target="_blank" class="contact-btn">
-                        <i class="fab fa-whatsapp"></i>
-                        واتساب
-                    </a>
-                </div>
-            </div>
-            ${menuHTML}
-        </div>
-    `;
+    return menuHTML || '<p class="no-menu">لا توجد أطباق متاحة حالياً</p>';
 }
 
 // الحصول على اسم التصنيف للعرض
@@ -529,30 +783,196 @@ function getCategoryDisplayName(category) {
     return categoryNames[category] || category;
 }
 
-// إنشاء عنصر القائمة
-function createMenuItem(item, family) {
+// إنشاء بطاقة عنصر القائمة
+function createMenuItemCard(item, family) {
     return `
-        <div class="menu-item">
+        <div class="menu-item-card">
             <div class="item-image" style="background-image: url('${item.image}')"></div>
-            <div class="item-info">
+            <div class="item-content">
                 <h4 class="item-name">${item.name}</h4>
                 <p class="item-description">${item.description}</p>
                 <div class="item-details">
-                    <span class="item-price">${item.price} ريال</span>
+                    <div class="item-price">${item.price} ريال</div>
                     <span class="item-time">
                         <i class="fas fa-clock"></i>
                         ${item.time}
                     </span>
                 </div>
-                <div class="item-actions">
-                    <button class="add-to-cart-btn" data-item-id="${item.id}" data-family-id="${family.id}">
+                <button class="add-to-cart-btn" data-item-id="${item.id}" data-family-id="${family.id}">
+                    <i class="fas fa-plus"></i>
+                    إضافة للسلة
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// إنشاء قسم التقييمات
+function createReviewsSection(family) {
+    const reviews = getReviewsForFamily(family.id);
+    const averageRating = calculateAverageRating(reviews);
+    const ratingDistribution = calculateRatingDistribution(reviews);
+    
+    return `
+        <div class="reviews-section">
+            <div class="reviews-summary">
+                <div class="rating-overview">
+                    <div class="average-rating">
+                        <span class="rating-number">${averageRating}</span>
+                        <div class="rating-stars">
+                            ${createStarRating(averageRating)}
+                        </div>
+                        <span class="rating-count">(${reviews.length} تقييم)</span>
+                    </div>
+                    <div class="rating-breakdown">
+                        ${Object.entries(ratingDistribution).map(([stars, count]) => `
+                            <div class="rating-bar">
+                                <span class="stars-label">${stars} نجوم</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${(count / reviews.length) * 100}%"></div>
+                                </div>
+                                <span class="count-label">${count}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="add-review">
+                    <button class="add-review-btn" onclick="showAddReviewForm()">
                         <i class="fas fa-plus"></i>
-                        إضافة للسلة
+                        إضافة تقييم
                     </button>
+                </div>
+            </div>
+            
+            <div class="reviews-list">
+                <h4>آراء العملاء</h4>
+                ${reviews.map(review => createReviewCard(review)).join('')}
+            </div>
+            
+            <div class="add-review-form" id="add-review-form" style="display: none;">
+                <h4>إضافة تقييم جديد</h4>
+                <form onsubmit="submitReview(event)">
+                    <div class="form-group">
+                        <label>التقييم</label>
+                        <div class="star-rating-input">
+                            ${[5,4,3,2,1].map(star => `
+                                <input type="radio" name="rating" value="${star}" id="star${star}">
+                                <label for="star${star}"><i class="fas fa-star"></i></label>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>الاسم</label>
+                        <input type="text" name="name" required placeholder="اكتب اسمك">
+                    </div>
+                    <div class="form-group">
+                        <label>التعليق</label>
+                        <textarea name="comment" required placeholder="شاركنا رأيك في الأسرة والطعام"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-review-btn">إرسال التقييم</button>
+                        <button type="button" class="cancel-review-btn" onclick="hideAddReviewForm()">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+// إنشاء قسم معلومات الأسرة
+function createInfoSection(family) {
+    return `
+        <div class="info-section">
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h4>التخصصات</h4>
+                    <div class="specialties-list">
+                        ${family.specialties.map(specialty => `
+                            <span class="specialty-badge">${specialty}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4>ساعات العمل</h4>
+                    <div class="working-hours">
+                        <div class="day-hours">
+                            <span>السبت - الخميس</span>
+                            <span>8:00 ص - 11:00 م</span>
+                        </div>
+                        <div class="day-hours">
+                            <span>الجمعة</span>
+                            <span>2:00 م - 11:00 م</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h4>التوصيل</h4>
+                    <div class="delivery-info">
+                        <p>رسوم التوصيل: 15 ريال</p>
+                        <p>الحد الأدنى للطلب: 50 ريال</p>
+                        <p>وقت التوصيل: 30-45 دقيقة</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h4>الشهادات</h4>
+                    <div class="certificates">
+                        <span class="certificate-badge">
+                            <i class="fas fa-check-circle"></i>
+                            مرخصة من البلدية
+                        </span>
+                        <span class="certificate-badge">
+                            <i class="fas fa-check-circle"></i>
+                            شهادة سلامة غذائية
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     `;
+}
+
+// العودة للصفحة الرئيسية
+function goBackToHome() {
+    document.getElementById('family-page').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    document.title = 'أسرتي - منصة الأسر المنتجة';
+    window.scrollTo(0, 0);
+}
+
+// تهيئة تبويبات صفحة الأسرة
+function initializeFamilyTabs() {
+    const tabs = document.querySelectorAll('.family-tab');
+    const panels = document.querySelectorAll('.tab-panel');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.getAttribute('data-tab');
+            
+            // إزالة الفئة النشطة من جميع التبويبات
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+            
+            // إضافة الفئة النشطة للتبويب المحدد
+            tab.classList.add('active');
+            document.getElementById(`${tabName}-panel`).classList.add('active');
+        });
+    });
 }
 
 // إضافة مستمعي الأحداث لصفحة الأسرة
